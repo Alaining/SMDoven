@@ -16,10 +16,13 @@ float old_temp = 0;
 float old_hum = 0;
 
 int sensorPin = A0;
+int ticktime = 0;
 
 void setup()
 {
   delay(100);
+  pinMode(D10, OUTPUT);
+  digitalWrite(D10, LOW);
   analogReadResolution(12);
   Serial.begin(115200);
   while (!Serial)
@@ -63,5 +66,16 @@ void loop()
 
   Serial.println(iir.first()); // print current IIR filtered temp
   Serial.println();
+
+  if (iir.first() < 30 && ticktime > 20)
+  {
+    digitalWrite(D10, HIGH); //
+  }
+
+  if (iir.first() > 40 && ticktime > 20)
+  {
+    digitalWrite(D10, LOW); //
+  }
+  ticktime++;
   delay(100);
 }
